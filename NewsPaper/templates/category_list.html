@@ -1,0 +1,62 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}!
+{% block title %}
+News
+{% endblock title %}
+
+{% block content %}
+{% if is_not_subscriber %}
+<p class="text-center"><a href="{}" class="btn btn-secondary btn-sm">Подписаться</a> </p>
+{% endif %}
+
+   <h1>Все статьи</h1>
+   <form action="" method="get">
+       {{ filterset.form.as_p }}
+       <input type="submit" value="Найти" />
+   </form>
+
+<hr>
+
+    {% if perms.news.add_news %}
+    <a href="{% url 'news_create' %}">Добавить новость</a>
+    {% endif %}
+
+   <h3>{{ news|length }}</h3>
+
+   <hr>
+   {% if news %}
+       <table>
+           <tr>
+               <td>Заголовок</td>
+               <td>Дата публикации</td>
+               <td>Текст</td>
+
+                {% if perms.news.change_news or perms.news.delete_news %}
+                <td>Действия</td>
+                {% endif %}
+
+
+
+       <ul class="list-group list-group-flush">
+           {% for newspost in category_news_list %}
+                <li class="list-group-item">
+                    <small class="fw-bold">{{ newspost.date | date:'d M Y' }} </small>
+                    <a href="{% url 'news_list' newspost.id %}">{{ newspost.title }}</a>
+                    <small class="text-muted">(автор: {{ newspost.author }})</small> <br>
+                    <small class="fw-bold">категории:
+                        {% for category in newspost.category.all %}
+                                <a href="{}% url 'category_list' category.id %" {{ category }}
+                        {% endfor %}
+                    </small>
+                    <p>{{newspost.text | truncatechars:210}}</p>
+           </li>
+           {% endfor %}
+       </ul>
+       </table>
+   {% else %}
+       <h2>Статей нет!</h2>
+   {% endif %}
+
+
+
+{% endblock content %}
